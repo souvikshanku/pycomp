@@ -1,4 +1,3 @@
-
 class Node:
     def __init__(self, value):
         self.value = value
@@ -21,6 +20,6 @@ class Node:
 
 def tprint(node, level=0):
     if node is not None and node.value is not None:
-        tprint(node.left, level + 1)
-        print(' ' * 6 * level + '-> ' + str(node.value))
         tprint(node.right, level + 1)
+        print(' ' * 6 * level + '-> ' + str(node.value))
+        tprint(node.left, level + 1)
