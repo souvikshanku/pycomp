@@ -3,7 +3,7 @@ from collections import defaultdict
 from node import Node, tprint
 
 
-def build_tree(string: str) -> Node:
+def _build_tree(string: str) -> Node:
     count = defaultdict(int)
 
     for char in string:
@@ -11,7 +11,7 @@ def build_tree(string: str) -> Node:
 
     count = {key: count[key] for key in sorted(count, key=count.get)}
 
-    for i in range(len(count) - 1):
+    for _ in range(len(count) - 1):
         count = {key: count[key] for key in sorted(count, key=count.get)}
 
         root = Node(list(count.keys())[0].value + list(count.keys())[1].value)
@@ -24,7 +24,7 @@ def build_tree(string: str) -> Node:
     return list(count.keys())[0]
 
 
-def _dfs(node: Node, path: str, encoding: dict):
+def _dfs(node: Node, path: str, encoding: dict) -> dict:
     if node.left is not None:
         _dfs(node.left, path + "0", encoding)
     else:
@@ -38,17 +38,41 @@ def _dfs(node: Node, path: str, encoding: dict):
     return encoding
 
 
-def get_encoding(node) -> dict:
+def _get_encoding(node) -> dict:
     encoding = {}
     path = ""
-
     encoding = _dfs(node, path, encoding)
 
     return encoding
 
 
+def encode(string: str) -> bytearray:
+    root_node = _build_tree(string)
+    encoding = _get_encoding(root_node)
+
+    header = ""
+    for char in set(string):
+        header += char + " " + encoding[char] + "\n"
+
+    header += chr(8)
+
+    data = ""
+    for char in string:
+        data += encoding[char]
+
+    num_extra_0s = ((len(data) // 8) + 1) * 8 - len(data)
+    data += "0" * num_extra_0s
+
+    data_bytes = bytearray()
+    for i in range(0, len(data), 8):
+        data_bytes.append(int(data[i:i + 8], 2))
+
+    return bytearray(header.encode('ascii')) + data_bytes
+
+
 if __name__ == "__main__":
-    string = "aaaaaaaaaddbccc"
-    node = build_tree(string)
-    tprint(node)
-    print(get_encoding(node))
+    string = "aaaaaaaaasavemeeeeee"
+    root_node = _build_tree(string)
+    tprint(root_node)
+    print(_get_encoding(root_node))
+    print(list(encode(string)))
