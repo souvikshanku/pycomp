@@ -70,9 +70,22 @@ def encode(string: str) -> bytearray:
     return bytearray(header.encode('ascii')) + data_bytes
 
 
+def compress(path: str):
+    with open(path, "rb") as file:
+        data = file.read().decode("ascii")
+
+    comp_data = encode(data)
+
+    with open("./compressed.bin", "wb") as file:
+        file.write(comp_data)
+
+    return comp_data
+
+
 if __name__ == "__main__":
     string = "aaaaaaaaasavemeeeeee"
     root_node = _build_tree(string)
     tprint(root_node)
     print(_get_encoding(root_node))
     print(list(encode(string)))
+    # compress("./sample.txt")
