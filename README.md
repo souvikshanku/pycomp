@@ -3,7 +3,7 @@ TODO
 * Huffman coding
     * Binary Tree ✅
     * Enocder ✅
-    * Decoder
+    * Decoder ✅
 * LZSS
     * Encoder
     * Decoder
