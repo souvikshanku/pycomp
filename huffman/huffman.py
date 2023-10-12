@@ -94,7 +94,7 @@ def decompress(path: str):
     length = ""
 
     for i in range(len(c_data)):
-        if c_data[i] == 10:
+        if c_data[i] == 10:  # Space
             break
         length += chr(c_data[i])
 
