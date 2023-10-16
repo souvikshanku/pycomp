@@ -5,5 +5,5 @@ TODO
     * Enocder ✅
     * Decoder ✅
 * LZSS
-    * Encoder
-    * Decoder
+    * Encoder ✅
+    * Decoder ✅
