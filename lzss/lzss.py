@@ -1,9 +1,9 @@
 import os
 
-BUFFER_SIZE = 16
+BUFFER_SIZE = 256
 
 
-def search(SEARCH_BUFFER: str, data, pos) -> tuple[int, int]:
+def _search(SEARCH_BUFFER: str, data, pos) -> tuple[int, int]:
     found_at = -1
     i = 1  # == number of consecutive char matches
 
@@ -14,6 +14,23 @@ def search(SEARCH_BUFFER: str, data, pos) -> tuple[int, int]:
     return found_at, i - 1
 
 
+def _break(c_data: bytes, comma_pos: int) -> tuple[int, int]:
+    # Find the comma
+    while True:
+        if c_data[comma_pos] == ord(","):
+            break
+        comma_pos += 1
+
+    # Find the Escape character
+    end = comma_pos
+    while True:
+        if c_data[end] == 27:
+            break
+        end += 1
+
+    return comma_pos, end
+
+
 def encode(string: str) -> str:
     SEARCH_BUFFER = ""
 
@@ -21,7 +38,7 @@ def encode(string: str) -> str:
     data = ""
 
     while pos < len(string):
-        found_at, num_matches = search(SEARCH_BUFFER, string, pos)
+        found_at, num_matches = _search(SEARCH_BUFFER, string, pos)
 
         if found_at != -1:
             to_replace_with = (
@@ -49,8 +66,6 @@ def compress(path: str) -> None:
     with open(path, "rb") as file:
         data = file.read().decode("ascii")
 
-    print(data)
-
     comp_data = encode(data).encode("ascii")
 
     with open("./compressed.bin", "wb") as file:
@@ -62,24 +77,6 @@ def compress(path: str) -> None:
     return
 
 
-def _break(c_data: bytes, start: int) -> tuple[int, int]:
-    # Find the comma
-    while True:
-        if c_data[start] == ord(","):
-            break
-        start += 1
-
-    # Find the Escape character
-    end = start
-    while True:
-        if c_data[end] == 27:
-            break
-        end += 1
-
-    print(start, end)
-    return start, end
-
-
 def decompress(path: str) -> None:
     with open(path, "rb") as file:
         c_data = file.read()
@@ -88,25 +85,36 @@ def decompress(path: str) -> None:
 
     i = 0
     while i < len(c_data):
-        print(c_data[i])
+
         if c_data[i] != 27:
             decomp_data += chr(c_data[i])
+            i += 1
         else:
             comma_pos, end = _break(c_data, i)
-            start = int(c_data[i:comma_pos + 1], 2)
-            num_matches = c_data[comma_pos + 1:end+1]
 
-            search_buffer = [
-               chr(byte) for byte in decomp_data[-BUFFER_SIZE:]
-            ]
-            match = search_buffer[start:start + num_matches + 1]
-            decomp_data += match
+            start = int(c_data[i + 1:comma_pos])
+            num_matches = int(c_data[comma_pos + 1:end])
 
-        i += 1
+            search_buffer = [byte for byte in decomp_data[-BUFFER_SIZE:]]
+            match = search_buffer[start:start + num_matches]
+            decomp_data += "".join(match)
 
-    print(decomp_data)
+            i = end + 1
+
+    with open("./decompressed.txt", "wb") as file:
+        file.write(decomp_data.encode("ascii"))
+
+    return
 
 
 if __name__ == "__main__":
     compress("sample.txt")
     decompress("compressed.bin")
+
+    with open("./sample.txt", "rb") as file:
+        og = file.read().decode("ascii")
+
+    with open("./decompressed.txt", "rb") as file:
+        new = file.read().decode("ascii")
+
+    assert og == new
