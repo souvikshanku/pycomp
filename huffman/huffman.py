@@ -1,7 +1,7 @@
 from collections import defaultdict
 import os
 
-from node import Node
+from huffman.node import Node
 
 
 def _build_tree(string: str) -> Node:
