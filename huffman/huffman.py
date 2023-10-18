@@ -47,11 +47,15 @@ def _get_encoding(node) -> dict:
     return encoding
 
 
-def encode(string: str) -> bytearray:
-    header = str(len(string)) + "\n"
+def encode(string: str, encoding: dict = None) -> bytearray:
+    if not encoding:
+        root_node = _build_tree(string)
+        encoding = _get_encoding(root_node)
+        encoding_given = False
+    else:
+        encoding_given = True
 
-    root_node = _build_tree(string)
-    encoding = _get_encoding(root_node)
+    header = str(len(string)) + "\n"
 
     for char in set(string):
         header += char + " " + encoding[char] + chr(27)  # Escape
@@ -69,7 +73,10 @@ def encode(string: str) -> bytearray:
     for i in range(0, len(data), 8):
         data_bytes.append(int(data[i:i + 8], 2))
 
-    return bytearray(header.encode('ascii')) + data_bytes
+    if encoding_given:
+        return data_bytes
+    else:
+        return bytearray(header.encode('ascii')) + data_bytes
 
 
 def compress(path: str) -> None:

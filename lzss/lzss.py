@@ -1,6 +1,6 @@
 import os
 
-BUFFER_SIZE = 256
+BUFFER_SIZE = 1024
 
 
 def _search(SEARCH_BUFFER: str, data, pos) -> tuple[int, int]:
