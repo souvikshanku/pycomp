@@ -108,13 +108,4 @@ def decompress(path: str) -> None:
 
 
 if __name__ == "__main__":
-    compress("sample.txt")
-    decompress("compressed.bin")
-
-    with open("./sample.txt", "rb") as file:
-        og = file.read().decode("ascii")
-
-    with open("./decompressed.txt", "rb") as file:
-        new = file.read().decode("ascii")
-
-    assert og == new
+    print(list(encode("hello hello hello")))

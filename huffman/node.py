@@ -23,3 +23,14 @@ def tprint(node, level=0):
         tprint(node.right, level + 1)
         print(' ' * 6 * level + '-> ' + str(node.value))
         tprint(node.left, level + 1)
+
+
+if __name__ == "__main__":
+    node1 = Node("1")
+    node2 = Node("2")
+    node3 = Node("3")
+    node4 = Node("4")
+    node5 = Node("5")
+    node3.set_children([node4, node5])
+    node1.set_children([node2, node3])
+    tprint(node1)

@@ -137,23 +137,3 @@ def decompress(path: str) -> None:
         file.write(decomp_data.encode("ascii"))
 
     return
-
-
-if __name__ == "__main__":
-    from node import tprint
-    string = "aaaaaaaaasavemeeeeee"
-    root_node = _build_tree(string)
-    tprint(root_node)
-    print(_get_encoding(root_node))
-    print(list(encode(string)))
-
-    compress("./sample.txt")
-    decompress("./compressed.bin")
-
-    with open("./sample.txt", "rb") as file:
-        og = file.read().decode("ascii")
-
-    with open("./decompressed.txt", "rb") as file:
-        new = file.read().decode("ascii")
-
-    assert og == new
