@@ -1,5 +1,5 @@
 
-Implementation of Huffman Code and LZSS compression algorithms.
+Implementation of Huffman Code and LZSS compression algorithm.
 
 #### Example Usage
 ```python
@@ -22,4 +22,4 @@ assert og == new
 * [Huffman Coding and Data Compression](https://web.stanford.edu/class/archive/cs/cs106b/cs106b.1214/handouts/290%20Huffman%20Coding.pdf)
 
 #### ToDo
-Implement more compression algos
+Implement more compression algorithms.
