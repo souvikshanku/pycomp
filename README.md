@@ -3,18 +3,18 @@ Implementation of Huffman Code and LZSS compression algorithm.
 
 #### Example Usage
 ```python
-from huffman.huffman import compress, decompress
+>>> from huffman.huffman import compress, decompress
 
-compress("./sample.txt")
-decompress("./compressed.bin")
+>>> compress("./sample.txt")
+>>> decompress("./compressed.bin")
 
-with open("./sample.txt", "rb") as file:
+>>> with open("./sample.txt", "rb") as file:
     og = file.read().decode("ascii")
 
-with open("./decompressed.txt", "rb") as file:
+>>> with open("./decompressed.txt", "rb") as file:
     new = file.read().decode("ascii")
 
-assert og == new
+>>> assert og == new
 ```
 
 #### References
